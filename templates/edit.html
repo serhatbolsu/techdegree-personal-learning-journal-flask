@@ -12,9 +12,9 @@
         {{ render_field(form.timeSpent) }}<br>
         {{ render_field(form.whatILearned) }}
         {{ render_field(form.ResourcesToRemember) }}
-        {{ form.tags }}
+        {{ render_field(form.tags, class="tag") }}
         <input type="submit" value="Edit Entry" class="button">
-        <a href="#" class="button button-secondary">Cancel</a>
+        <a href="{{ url_for('index') }}" class="button button-secondary">Cancel</a>
     </form>
 </div>
 {% endblock %}

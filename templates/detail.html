@@ -23,6 +23,16 @@
                 {% endfor %}
             </ul>
         </div>
+        <div class="entry">
+            <h3>Tags :</h3>
+            <ul>
+                
+                {% for i in entry.tags %}
+
+                <li><a href="{{ url_for('tag_entries', slug=i.slug) }}"><span>{{ i.name }}</span></a></li>
+                {% endfor %}
+            </ul>
+        </div>
     </article>
 </div>
 {% endblock %}

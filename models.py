@@ -1,9 +1,10 @@
 import datetime
-
+from flask_login import UserMixin
+from flask_bcrypt import generate_password_hash
 from peewee import *
 from flask_peewee.utils import slugify
 
-DATABASE = PostgresqlDatabase('serhatbolsu', user='serhatbolsu',autorollback=True)
+DATABASE = PostgresqlDatabase('serhatbolsu', user='serhatbolsu', autorollback=True)
 
 
 class Entry(Model):
@@ -34,17 +35,45 @@ class Entry(Model):
 
 
 class Tag(Model):
-    tag = CharField(max_length=50, primary_key=True)
+    name = CharField(max_length=50, primary_key=True)
     entries = ManyToManyField(Entry, backref='tags')
+    slug = CharField()
+
+    def __init__(self, *args, **kwargs):
+        super(Tag, self).__init__(*args, **kwargs)
+        if self.name:
+            self.slug = slugify(self.name)
 
     def __repr__(self):
-        return '<%s>' % self.tag
+        return '<Tag %s>' % self.name
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         database = DATABASE
 
 
+class User(UserMixin, Model):
+    email = CharField(unique=True)
+    password = CharField()
+    is_admin = BooleanField(default=False)
+
+    class Meta:
+        database = DATABASE
+
+    @classmethod
+    def create_user(cls, email, password, admin=False):
+        try:
+            with DATABASE.transaction():
+                cls.create(
+                    email=email,
+                    password=generate_password_hash(password),
+                    is_admin=admin)
+        except IntegrityError:
+            raise ValueError("User already exists")
+
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Entry, Tag, Tag.entries.get_through_model()], safe=True)
+    DATABASE.create_tables([User, Entry, Tag, Tag.entries.get_through_model()], safe=True)

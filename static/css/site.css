@@ -183,6 +183,22 @@ ul li a {
 	font-size: 18px;
 }
 
+/*Notifications*/
+.notification {
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 4px;
+  color: #fff;
+}
+.success {
+  background: #70DA8B;
+  color: #fcfff6;
+}
+.error {
+  background: #FFE6B2;
+  color: #c5513b;
+  margin-bottom: 20px;
+}
 
 
 /* ==========================================================================

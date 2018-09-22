@@ -13,25 +13,48 @@
     <body>
         <header>
             <div class="container">
-                <div class="site-header">
-                    <a class="logo" href="{{ url_for('index')}}"><i class="material-icons">library_books</i></a>
-                    {% if entry %}
-                    <a class="button icon-right" href="{{ url_for('edit_entry', slug= entry.slug) }}"><span>Edit Entry</span> <i class="material-icons">edit</i></a>
-                    <a class="button icon-right" href="{{ url_for('delete_entry', slug= entry.slug) }}"><span>Delete Entry</span> <i class="material-icons">delete</i></a>
+                <div class="row">
+                    {% if current_user.is_authenticated %}
+                        <span>Hello{% if current_user.is_authenticated %} {{ current_user.email }}{% endif %}!</span>
+                        <a href="{{ url_for('logout') }}" class="icon-power" title="Log out"><i class="material-icons">logout</i></a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="button-secondary icon-left" title="Log in"><span>Login</span><i class="material-icons">login</i></a>
+                        <a href="{{ url_for('register') }}" class="button-secondary icon-left" title="Register">><span>Register</span><i class="material-icons">register</i></a>
                     {% endif %}
+                </div>
+                <div class="site-header">
+                    <!--Log in/Log out-->
+                    <a class="logo" href="{{ url_for('index')}}"><i class="material-icons">library_books</i></a>
+                    {% if current_user.is_authenticated %}
+                        {% if entry %}
+                            <a class="button icon-left" href="{{ url_for('delete_entry', slug= entry.slug) }}"><span>Delete Entry</span> <i class="material-icons">delete</i></a>
+                            <a class="button icon-left" href="{{ url_for('edit_entry', slug= entry.slug) }}"><span>Edit Entry</span> <i class="material-icons">edit</i></a>
+                        {% endif %}
                     <a class="button icon-right" href="{{ url_for('create_entry') }}"><span>New Entry</span> <i class="material-icons">add</i></a>
+                    {% endif %}
                 </div>
             </div>
+            {# Print flash messages #}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="notification {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         </header>
         <section>
             <div class="container">
+                {% if not current_user.is_authenticated %}
+                    <p>Please Login in order to use the Journal</p>
+                {% endif %}
                 {% block content %}
                 {% endblock %}
             </div>
         </section>
         <footer>
             <div>
-                &copy; MyJournal
+                &copy; Serhat Bolsu's MyJournal
             </div>
         </footer>
     </body>
