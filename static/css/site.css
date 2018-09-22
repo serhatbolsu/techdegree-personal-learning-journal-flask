@@ -112,6 +112,7 @@ h3 {
 p {
 	line-height: 1.8em;
 	font-size: 18px;
+    white-space: pre-wrap;
 }
 p a {
 	border-bottom: 2px solid #678f89;

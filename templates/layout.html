@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>MyJournal</title>
+        <link href="https://fonts.googleapis.com/css?family=Cousine:400" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:600" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/normalize.css">
+        <link rel="stylesheet" href="/static/css/site.css">
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="site-header">
+                    <a class="logo" href="{{ url_for('index')}}"><i class="material-icons">library_books</i></a>
+                    {% if entry %}
+                    <a class="button icon-right" href="{{ url_for('edit_entry', slug= entry.slug) }}"><span>Edit Entry</span> <i class="material-icons">edit</i></a>
+                    <a class="button icon-right" href="{{ url_for('delete_entry', slug= entry.slug) }}"><span>Delete Entry</span> <i class="material-icons">delete</i></a>
+                    {% endif %}
+                    <a class="button icon-right" href="{{ url_for('create_entry') }}"><span>New Entry</span> <i class="material-icons">add</i></a>
+                </div>
+            </div>
+        </header>
+        <section>
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </section>
+        <footer>
+            <div>
+                &copy; MyJournal
+            </div>
+        </footer>
+    </body>
+</html>
