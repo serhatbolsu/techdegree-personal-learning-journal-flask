@@ -3,16 +3,18 @@
 {% from "macros.html" import render_field %}
 
 {% block content %}
-<div class="entry-list">
-    <h2>Entry List</h2>
-    {% for entry in entries %}
-    <article>
-        {{ render_field(form.title) }}<br>
-        {{ render_field(form.date) }}<br>
-        {{ render_field(form.timeSpent) }}<br>
-        {{ render_field(form.whatILearned) }}
-        {{ render_field(form.ResourcesToRemember) }}
-    </article>
-{% endfor %}
+<div class="container">
+    <div class="entry-list">
+        <h2>Entry List</h2>
+        {% for entry in entries %}
+        <article>
+            {{ render_field(form.title) }}<br>
+            {{ render_field(form.date) }}<br>
+            {{ render_field(form.timeSpent) }}<br>
+            {{ render_field(form.whatILearned) }}
+            {{ render_field(form.ResourcesToRemember) }}
+        </article>
+    {% endfor %}
+    </div>
 </div>
 {% endblock %}

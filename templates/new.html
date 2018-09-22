@@ -3,17 +3,19 @@
 {% from "macros.html" import render_field %}
 
 {% block content %}
-<div class="new-entry">
-    <h2>New Entry</h2>
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {{ render_field(form.title) }}<br>
-        {{ render_field(form.date) }}<br>
-        {{ render_field(form.timeSpent) }}<br>
-        {{ render_field(form.whatILearned) }}
-        {{ render_field(form.ResourcesToRemember) }}
-        <input type="submit" value="Publish Entry" class="button">
-        <a href="#" class="button button-secondary">Cancel</a>
-    </form>
+<div class="container">
+    <div class="new-entry">
+        <h2>New Entry</h2>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.title) }}<br>
+            {{ render_field(form.date) }}<br>
+            {{ render_field(form.timeSpent) }}<br>
+            {{ render_field(form.whatILearned) }}
+            {{ render_field(form.ResourcesToRemember) }}
+            <input type="submit" value="Publish Entry" class="button">
+            <a href="{{ url_for('index') }}" class="button button-secondary">Cancel</a>
+        </form>
+    </div>
 </div>
 {% endblock %}

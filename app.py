@@ -142,6 +142,14 @@ def edit_entry(slug):
         entry.timeSpent = form.timeSpent.data
         entry.whatILearned = form.whatILearned.data
         entry.ResourcesToRemember = form.ResourcesToRemember.data
+        entry.tags.clear()
+        for tag in form.tags.data:
+            if tag not in [tag for tag in entry.tags]:
+                try:
+                    tag.save(force_insert=True)
+                except models.IntegrityError:
+                    pass # Tag already exists do not need to create
+                entry.tags.add([tag])
         entry.save()
         flash("Entry edited.", 'success')
         return redirect(url_for('index'))
@@ -153,6 +161,7 @@ def edit_entry(slug):
 def delete_entry(slug):
     entry = models.Entry.select().where(models.Entry.slug == slug).get()
     if entry:
+        entry.tags.clear()
         entry.delete_instance()
         return redirect(url_for('index'))
 
@@ -170,7 +179,7 @@ def index():
 @login_required
 def tag_entries(slug):
     tag = models.Tag.get(models.Tag.slug==slug)
-    return render_template('index.html', entries=tag.entries)
+    return render_template('tag_detail.html', tag=tag, entries=tag.entries)
 
 
 if __name__ == '__main__':
@@ -196,7 +205,10 @@ if __name__ == '__main__':
                           "<a href="">dolor augue</a> gravida lacus, non accumsan. Vestibulum ut metus eleifend, "
                           "malesuada nisl at, scelerisque sapien."
                           "it is really hard to mention in here."),
-            ResourcesToRemember="Teamtreehouse, beyin"
+            ResourcesToRemember=("This is line 1"
+                                 "This lis line 2"
+                                 "This is another resources: http://www.qualifylabs.com"
+                                 "My <a href="">Greatest</a> Resource: http://www.qualifylabs.com")
         )
     except ValueError:
         pass
@@ -204,9 +216,7 @@ if __name__ == '__main__':
         models.Tag.create(name="BasicThings")
         models.Tag.create(name="MyTag2")
         models.Tag.create(name="MyTag3")
-        models.Entry.get(models.Entry.slug == 'my-last-entry').tags.add(['BasicThings'])
-        models.Entry.get(models.Entry.slug == 'my-first-entry').tags.add(['BasicThings'])
-        models.Entry.get(models.Entry.slug == 'my-last-entry').tags.add(['MyTag2', 'MyTag3'])
+        models.Entry.get(models.Entry.slug == 'my-first-entry').tags.add(['BasicThings', 'MyTag2', 'MyTag3'])
     except:
         pass
     app.run(debug=DEBUG, host=HOST, port=PORT)

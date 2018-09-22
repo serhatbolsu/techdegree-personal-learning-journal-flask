@@ -3,6 +3,7 @@
 {% from "macros.html" import render_field %}
 
 {% block content %}
+<div class="container">
 <div class="entry-list single">
     <article>
         <h1>{{ entry.title }}</h1>
@@ -24,15 +25,21 @@
             </ul>
         </div>
         <div class="entry">
+            {% if entry.tags %}
             <h3>Tags :</h3>
-            <ul>
-                
+                <br>
+                <span> / </span>
                 {% for i in entry.tags %}
-
-                <li><a href="{{ url_for('tag_entries', slug=i.slug) }}"><span>{{ i.name }}</span></a></li>
+                <a href="{{ url_for('tag_entries', slug=i.slug) }}"><span>{{ i.name }}</span></a></li>
+                <span> / </span>
                 {% endfor %}
-            </ul>
+            {% endif %}
         </div>
     </article>
+    <div class="edit">
+        <p><a href="{{ url_for('edit_entry', slug= entry.slug) }}">Edit Entry</a></p>
+        <p><a href="{{ url_for('delete_entry', slug= entry.slug) }}">Delete Entry</a></p>
+    </div>
+</div>
 </div>
 {% endblock %}

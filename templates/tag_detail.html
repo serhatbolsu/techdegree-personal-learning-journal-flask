@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h4 style="text-align: center;">Entries that are tagged by <b>{{ tag.name}}</b></h4>
+<div class="container">
+    <div class="entry-list">
+        {% for entry in entries %}
+        <article>
+            <h2><a href="{{ url_for('view_entry', slug=entry.slug) }}">{{ entry.title }}</a></h2>
+            <time datetime="2016-01-31">{{ entry.date.strftime("%m/%d/%Y") }}</time><br>
+            <span> / </span>
+            {% for tag in entry.tags %}
+            <a href="{{ url_for('tag_entries', slug=tag.slug) }}"><span>{{ tag.name }}</span></a>
+            <span> / </span>
+            {% endfor %}
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

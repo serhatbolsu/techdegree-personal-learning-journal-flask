@@ -2,11 +2,15 @@
 {% from 'macros.html' import render_field %}
 
 {% block content %}
-<form method="POST" action="" class="form">
-    {{ form.hidden_tag() }}
-    {% for field in form if field.widget.input_type != 'hidden' %}
-        {{ render_field(field) }}
-    {% endfor %}
-    <button type="submit" id="submit">Register!</button>
-</form>
+<div class="container">
+    <div class="edit-entry">
+    <form method="POST" action="" class="form">
+        {{ form.hidden_tag() }}
+        {% for field in form if field.widget.input_type != 'hidden' %}
+            {{ render_field(field) }}
+        {% endfor %}
+        <button type="submit" id="submit">Register!</button>
+    </form>
+    </div>
+</div>
 {% endblock %}
