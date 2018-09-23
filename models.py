@@ -4,7 +4,10 @@ from flask_bcrypt import generate_password_hash
 from peewee import *
 from flask_peewee.utils import slugify
 
-DATABASE = PostgresqlDatabase('serhatbolsu', user='serhatbolsu', autorollback=True)
+DATABASE = SqliteDatabase('app.db')
+
+
+# DATABASE = PostgresqlDatabase('serhatbolsu', user='serhatbolsu', autorollback=True)
 
 
 class Entry(Model):
@@ -15,6 +18,7 @@ class Entry(Model):
     ResourcesToRemember = TextField()
     slug = CharField(unique=True)
 
+
     class Meta:
         database = DATABASE
         ordering = ('-date',)
@@ -23,7 +27,7 @@ class Entry(Model):
     def create_entry(cls, title, date, timeSpent, whatILearned, ResourcesToRemember):
         try:
             with DATABASE.transaction():
-                cls.create(
+                inst = cls.create(
                     title=title,
                     date=date,
                     timeSpent=timeSpent,
@@ -32,6 +36,17 @@ class Entry(Model):
                     slug=slugify(title))
         except IntegrityError:
             raise ValueError("Entry already exist")
+        else:
+            return inst
+
+    def create_and_add_tags(self, tags):
+        with DATABASE.transaction():
+            for tag in tags:
+                try:
+                    tag.save(force_insert=True)
+                except IntegrityError:
+                    pass
+            self.tags.add(tags)
 
 
 class Tag(Model):

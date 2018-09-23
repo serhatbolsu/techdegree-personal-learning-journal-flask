@@ -18,8 +18,7 @@ are right for the job. However, if you identify a place where a more advanced
 tool is appropriate, please mention that in a code comment as you and your
 mentor may want to discuss it later.
 """
-from flask import (Flask, url_for, render_template, redirect, flash,
-                   abort, g)
+from flask import (Flask, url_for, render_template, redirect, flash, g)
 from flask_bcrypt import check_password_hash
 from flask_login import (LoginManager, login_user, logout_user,
                          login_required, current_user)
@@ -107,26 +106,21 @@ def create_entry():
     form = forms.EntryForm()
     if form.validate_on_submit():
         flash("Entry created", 'success')
-        models.Entry.create_entry(
+        entry_new = models.Entry.create_entry(
             title=form.title.data,
-            date=form.date.data,
+            date=form.date.data.strftime('%d/%m/%Y'),
             timeSpent=form.timeSpent.data,
             whatILearned=form.whatILearned.data,
             ResourcesToRemember=form.ResourcesToRemember.data
         )
+        entry_new.create_and_add_tags(form.tags.data)
         return redirect(url_for('index'))
     return render_template('new.html', form=form)
 
 
-# @app.route('/entries/<int:id>')
 @app.route('/entries/<slug>')
 @login_required
 def view_entry(slug=None):
-    # if id:
-    #     entry = models.Entry.select().where(models.Entry.id == id).get()
-    #     render_template(url_for('entry_detail'), entry=entry)
-    #     return render_template('detail.html', entry=entry)
-    # elif slug:
     entry = models.Entry.select().where(models.Entry.slug == slug).get()
     return render_template('detail.html', entry=entry)
 
@@ -138,7 +132,7 @@ def edit_entry(slug):
     form = forms.EntryEditForm(obj=entry)
     if form.validate_on_submit():
         entry.title = form.title.data
-        entry.date = form.date.data
+        entry.date = form.date.data.strftime('%d/%m/%Y')
         entry.timeSpent = form.timeSpent.data
         entry.whatILearned = form.whatILearned.data
         entry.ResourcesToRemember = form.ResourcesToRemember.data
@@ -174,16 +168,17 @@ def index():
     return render_template('index.html', entries=entries)
 
 
-# TODO: Not finished
 @app.route('/tags/<slug>')
 @login_required
 def tag_entries(slug):
+    """List entries that include a single tag"""
     tag = models.Tag.get(models.Tag.slug==slug)
     return render_template('tag_detail.html', tag=tag, entries=tag.entries)
 
 
 if __name__ == '__main__':
     models.initialize()
+    # Create initial data
     try:
         models.User.create_user(
             email='serhat@email.com',

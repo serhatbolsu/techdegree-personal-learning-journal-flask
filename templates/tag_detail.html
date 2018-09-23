@@ -7,7 +7,7 @@
         {% for entry in entries %}
         <article>
             <h2><a href="{{ url_for('view_entry', slug=entry.slug) }}">{{ entry.title }}</a></h2>
-            <time datetime="2016-01-31">{{ entry.date.strftime("%m/%d/%Y") }}</time><br>
+            <time datetime="2016-01-31">{{ entry.date }}</time><br>
             <span> / </span>
             {% for tag in entry.tags %}
             <a href="{{ url_for('tag_entries', slug=tag.slug) }}"><span>{{ tag.name }}</span></a>
